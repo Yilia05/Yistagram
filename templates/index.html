@@ -6,12 +6,12 @@
     {% for image in images%}
     <article class="mod">
         <header class="mod-hd">
-            <time class="time">{{ image.created_date }}</time>
-            <a href="/profile/{{ image.user.id }}" class="avatar">
+            <time class="time">{{ image.create_date }}</time>
+            <a href="/profile/{{ image .user.id }}" class="avatar">
                 <img src="{{ image.user.head_url }}">
             </a>
             <div class="profile-info">
-                <a title={{ image.user.username }} href="/profile/{{ image.user.id }}">{{image.user.username}}"</a>
+                <a title={{ image.user.username }} href="/profile/{{ image.user.id }}">{{ image.user.username }}"</a>
             </div>
         </header>
         <div class="mod-bd">
@@ -19,16 +19,18 @@
                 <a href="/image/{{ image.id }}">
                     <img src="{{ image.url }}">
                 </a>
-                <img src="{{ image.url }}">
             </div>
         </div>
         <div class="mod-ft">
+            <!--
             <section class="times">
                 <span></span>
                 <span>6.2百万</span>
                 <span> 次播放</span>
             </section>
+            -->
             <ul class="discuss-list">
+                <!--
                 <li>
                     <h1>
                         <a>toutvadisparaitre</a>
@@ -43,26 +45,27 @@
                         <span>That's what i call "awesomeness"</span>
                     </span>
                 </li>
+                -->
                 <li class="more-discuss">
                     <a>
-                        <span>全部 </span><span class="">10,883</span>
+                        <span>全部 </span><span class="">{{image.comments|length}}</span>
                         <span> 条评论</span></a>
                 </li>
+                {% for comment in image.comments %}
+                {% if loop.index > 2 %}{% break %}  {% endif %}
                 <li>
+                    <!--
                     <a class=" icon-remove" title="删除评论"></a>
-                    <a class="_4zhc5 _iqaka" title="zjuyxy" href="/zjuyxy/" data-reactid=".0.1.0.0.0.2.1.2:$comment-17856951190001917.1">zjuyxy</a>
+                    -->
+                    <a class="_4zhc5 _iqaka" title="{{comment.user.username}}" href="/profile/{{ comment.user.id }}" data-reactid=".0.1.0.0.0.2.1.2:$comment-17856951190001917.1">{{comment.user.username}}</a>
                     <span>
-                        <span>test</span>
+                        <span>{{ comment.content }}</span>
                     </span>
                 </li>
-                <li>
-                    <a class="icon-remove" title="删除评论"></a>
-                    <a>zjuyxy</a>
-                    <span>
-                        <span>test test test test test testtest test test test test testtest test test test test test</span>
-                    </span>
-                </li>
+                {% endfor %}
+
             </ul>
+
             <section class="discuss-edit">
                 <a class="icon-heart"></a>
                 <form>
