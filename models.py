@@ -44,13 +44,15 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(80), unique=True)
     password = db.Column(db.String(32))
+    salt = db.Column(db.String(32))
     head_url = db.Column(db.String(256))
     head_url2 = db.Column(db.String(256))
     images = db.relationship('Image',backref='user',lazy='dynamic')
 
-    def __init__(self, username, password):
+    def __init__(self, username, password,salt=''):
         self.username = username
         self.password = password
+        self.salt = salt
         self.head_url = 'http://image.nowcoder.com/head/' + str(random.randint(0, 1000)) + 'm.png'
 
     def __repr__(self):
