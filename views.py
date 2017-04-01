@@ -1,9 +1,9 @@
 # -*- encoding=UTF-8 -*-
-
+#flask mail库可以给用户发邮件
 from Yistagram import app, db
 from models import Image, User
 from flask import render_template, redirect, request, flash, get_flashed_messages
-import random, hashlib
+import random, hashlib, json
 from flask_login import login_user, logout_user, current_user, login_required
 
 @app.route('/')
@@ -24,7 +24,21 @@ def profile(user_id):
     user = User.query.get(user_id)
     if user == None:
         return redirect('/')
-    return render_template('/profile.html', user=user)
+    paginate = Image.query.filter_by(user_id=user_id).paginate(page=1, per_page=3, error_out=False)
+    return render_template('/profile.html', user=user, Image=paginate.items)
+
+@app.route('/profile/images/<int:user_id>/<int:page>/<int:per_page>')
+def user_images(user_id, page, per_page):
+    paginate = Image.query.filter_by(user_id=user_id).paginate(page=page, per_page=3, error_out=False)
+    map = {'has_next': paginate.has_next}
+    images = []
+    for image in paginate.items:
+        imgvo = {'id':image.id, 'url':image.url, 'comment_count':len(image.comments)}
+        images.append(imgvo)
+
+    map['images'] = images
+
+    return json.dumps(map)
 
 @app.route('/reloginpage/')
 def reloginpage():
